@@ -1,0 +1,211 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: grid;
+            place-items: center;
+            background-color: rgb(3, 4, 1);
+            color: aliceblue;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        main{
+            width: 80%;
+            height: 400px;
+            background-color: rgba(225, 220, 245, 0.938);
+            color: black;
+            text-align: center;
+            
+        }
+        .display{
+         color: aliceblue;
+          width: 80%;
+          height: 100px;
+          background-color: rgba(1, 4, 13, 0.919)
+        }
+        .dis{
+         display: grid;
+         place-items: center;
+        }
+        .players{
+            color: aliceblue;
+            width: 100%;
+            background-color: rgb(67, 60, 82);
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .buttons{
+            width: 50px;
+            overflow: hidden;
+
+            background-color: rgba(50, 25, 161, 0.719);
+            height: 50px;
+            color: white;
+        }
+        button:disabled{
+            opacity: 0.7;
+
+        }
+        button:disabled:hover{
+            cursor: not-allowed;
+
+        }
+        .alertbox{
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(66, 25, 190, 0.552);
+            display: none;
+            place-items: center;
+        }
+        .alert{
+            width: 400px;
+            height: 200px auto;
+            background-color: rgb(66, 25, 190);
+            border-radius: 9px;
+            box-shadow: 2px 3px 4px black;
+            color: aliceblue;
+            text-align: center;
+            animation: som  1s linear ;
+        }
+        @keyframes som {
+            0%{
+                transform: scale(0.5);
+            }
+            100%{
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ROCK ,PAPER , SCISSORS</h1>
+
+        <span>SCORE <br><b>player : <span id="playerscore">0</span></b><br>
+       <b>computer: <span id="computerscore">0</span></b></span>
+    </header>
+    <main>
+        <div class="content" id="container">
+            <h1>pick A Card</h1>
+           <div class="computer players" id="computer">
+            <p>COMPUTER</p>
+           </div>
+           <div class="dis">
+                 <div class="display" id="display"></div>
+           </div>
+            
+           <div class="player players" id="player">
+            <p>PLAYER</p>
+           </div>
+        </div>
+
+        <div class="alertbox" id="alertbox">
+            <div class="alert" id="alert">
+                <h1>Statics</h1><br>
+                <button onclick="close()">close❌</button>
+            </div>
+        </div>
+    </main>
+
+
+    <script>
+     var aler = document.getElementById("alert");
+     var score1 = document.getElementById("playerscore");
+     var score = document.getElementById("computerscore");
+     let scor = 0;
+       let scor1 = 0;
+      
+     var alertbox = document.getElementById("alertbox");
+     var display = document.getElementById("display");
+     var player = document.getElementById("player");
+     var computer = document.getElementById("computer");
+     let playerchoice;
+     let computerchoice;
+     let computerrate;
+     const choice1 = ['rock 🌑','paper ⬜','scissors ✂'];
+     const choice = [{
+            name: 'rock',
+            sticker: '🌑',
+            rate: 3
+         },
+         {
+            name: 'paper',
+            sticker: '⬜',
+              rate: 1
+         },
+         {
+            name: 'scissors',
+            sticker: '✂',
+              rate: 2
+         }
+        ];
+
+      choice.forEach(function(value, index){
+         var rand = Math.floor(Math.random()*3);
+        let button = document.createElement('button');
+        let button1 = document.createElement('button');
+        button.className = 'buttons';
+        button1.className = 'buttons';
+        button1.disabled = true;
+        button.innerHTML = `${value.name} <span>${value.sticker}</span>`;
+        button1.innerHTML = `${value.name} <span>${value.sticker}</span>`;
+        player.appendChild(button);
+        computer.append(button1);
+        button.addEventListener('click', function clicked() {
+           display.appendChild(button);
+           
+            playerchoice = `${value.name}`;
+            computerchoice = `${choice1[rand]}`;
+            display.innerHTML += `&nbsp;❌ &nbsp;<button class='buttons'>${computerchoice}</button>`;
+            if (computerchoice == 'rock 🌑') {
+                computerrate = 3;
+            }
+            else if (computerchoice == 'scissors ✂') {
+                 computerrate = 2;
+            } else {
+                computerrate = 1; 
+            }
+           
+            if (computerrate > value.rate) {
+                aler.innerHTML += `<span>Computer choose: </span><b>${computerchoice}</b> <br/> <b>YOU LOSE😥</b> <br/> `;
+                 scor += 1;
+            }else if (computerrate == value.rate) {
+                aler.innerHTML += `<span>Computer choose: </span><b>${computerchoice}</b> <br/> <b>IT A TIE🎗</b> <br/> `;
+            } else {
+               aler.innerHTML += `<span>Computer choose: </span><b>${computerchoice}</b> <br/> <b>YOU WON🎉🎊</b> <br/> `; 
+               scor1 += 1;
+            }
+            score1.innerHTML = scor1;
+      score.innerHTML = scor;
+            setInterval(() => {
+                alertbox.style.display = 'none';
+               
+            }, 7000);
+            setTimeout(() => {
+               alertbox.style.display = 'grid'; 
+               display.innerHTML ='';
+               computerrate = null;
+               playerchoice = '';
+               player.appendChild(button);
+            }, 2000);
+
+
+        });
+      });
+
+     function close(params) {
+        alertbox.style.display = 'none';
+     }
+    
+
+    </script>
+</body>
+</html>
